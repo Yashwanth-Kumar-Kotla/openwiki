@@ -72,7 +72,10 @@ const harness = vi.hoisted(() => ({
   beginCalls: 0,
   changedPaths: ["README.md"],
   currentRun: undefined as HarnessRun | undefined,
+  differentDuplicatePlanSubmission: false,
+  differentDuplicatePlanToolResults: [] as unknown[],
   driftOnce: false,
+  emitFrontmatterSignal: false,
   duplicatePlanSubmission: false,
   duplicatePlanToolResults: [] as unknown[],
   filesystemTools: [] as string[][],
@@ -265,6 +268,24 @@ vi.mock("deepagents", async (importOriginal) => {
               ) {
                 const duplicate = await completionTool.invoke(input);
                 harness.duplicatePlanToolResults.push(duplicate);
+              }
+              if (
+                toolName === "submit_plan" &&
+                harness.differentDuplicatePlanSubmission
+              ) {
+                const duplicate = await completionTool.invoke({
+                  name: toolName,
+                  id: `${toolName}-different-duplicate`,
+                  type: "tool_call",
+                  args: {
+                    ...input,
+                    pages: input.pages.map((page) => ({
+                      ...page,
+                      purpose: `${page.purpose} with a conflicting revision`,
+                    })),
+                  },
+                });
+                harness.differentDuplicatePlanToolResults.push(duplicate);
               }
               if (
                 toolName === "submit_page" &&
@@ -484,8 +505,18 @@ vi.mock("../../src/generation/repository-run.js", () => ({
       remaining: 0,
     });
   },
-  finishRepositoryRun() {
+  finishRepositoryRun(
+    _run: unknown,
+    options?: { onEvent?: (event: OpenWikiRunEvent) => void },
+  ) {
     harness.finishCalls += 1;
+    if (harness.emitFrontmatterSignal) {
+      options?.onEvent?.({
+        type: "text",
+        source: "main",
+        text: "1 OpenWiki page(s) still carry code-derived frontmatter (openwiki_generated: true): legacy.md\n",
+      });
+    }
     if (harness.driftOnce && harness.finishCalls === 1) {
       return { status: "complete", sourceChanged: true };
     }
@@ -578,7 +609,10 @@ beforeEach(() => {
   harness.beginCalls = 0;
   harness.changedPaths = ["README.md"];
   harness.currentRun = undefined;
+  harness.differentDuplicatePlanSubmission = false;
+  harness.differentDuplicatePlanToolResults = [];
   harness.driftOnce = false;
+  harness.emitFrontmatterSignal = false;
   harness.duplicatePlanSubmission = false;
   harness.duplicatePlanToolResults = [];
   harness.filesystemTools = [];
@@ -724,6 +758,35 @@ describe("runNativeRepositoryGeneration", () => {
     ]);
     expect(harness.pageSubmissionCalls).toBe(1);
     expect(harness.currentRun?.state.plan?.pages[0]?.status).toBe("complete");
+    expect(harness.finishCalls).toBe(1);
+  });
+
+  test("keeps the accepted plan when the planner submits a different plan", async () => {
+    harness.differentDuplicatePlanSubmission = true;
+    harness.planPaths = ["/openwiki/quickstart.md"];
+
+    await expect(runHarness()).resolves.toBeDefined();
+
+    expect(harness.planSubmissionCalls).toBe(2);
+    const [rejection] = harness.differentDuplicatePlanToolResults;
+    expect(ToolMessage.isInstance(rejection)).toBe(true);
+    if (!ToolMessage.isInstance(rejection)) {
+      throw new Error(
+        "Expected duplicate submit_plan to return a ToolMessage.",
+      );
+    }
+    expect(rejection.name).toBe("submit_plan");
+    expect(rejection.status).toBe("error");
+    expect(rejection.text).toContain(
+      '"message":"This OpenWiki run already has a different persisted plan."',
+    );
+    expect(rejection.text).toContain(
+      '"retry":"A plan is already installed. Stop planning and do not call submit_plan again."',
+    );
+    expect(harness.currentRun?.state.plan?.pages[0]?.purpose).toBe(
+      "Document /openwiki/quickstart.md",
+    );
+    expect(harness.pageSubmissionCalls).toBe(1);
     expect(harness.finishCalls).toBe(1);
   });
 
@@ -923,6 +986,24 @@ describe("runNativeRepositoryGeneration", () => {
         (event) =>
           event.type === "text" &&
           event.text.includes("finalized without advancing"),
+      ),
+    ).toBe(true);
+  });
+
+  test("forwards its own onEvent to finishRepositoryRun so frontmatter signals surface", async () => {
+    // finishRepositoryRun computes the real frontmatter report (covered in
+    // generation/repository-run.test.ts); here the mock simulates it emitting
+    // a signal through the onEvent it was handed, proving
+    // runNativeRepositoryGeneration forwards its caller's onEvent through
+    // rather than swallowing it.
+    harness.emitFrontmatterSignal = true;
+
+    const events = await runHarness();
+
+    expect(
+      events.some(
+        (event) =>
+          event.type === "text" && event.text.includes("openwiki_generated"),
       ),
     ).toBe(true);
   });

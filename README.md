@@ -43,6 +43,9 @@ You'll need [Node.js 22.22.0 or newer](https://nodejs.org).
 npm install -g openwiki
 ```
 
+If you use Pi, install the package through Pi in step 2 instead; a separate
+global OpenWiki installation is not required.
+
 <a id="coding-agent-integrations"></a>
 
 ### 2. Connect your coding agent
@@ -59,6 +62,7 @@ Choose the integration for your agent:
 | Kiro                | `openwiki integrations install kiro`        |
 | Oh My Pi            | `openwiki integrations install omp`         |
 | Antigravity         | `openwiki integrations install antigravity` |
+| Pi                  | `pi install npm:openwiki`                   |
 
 ### 3. Create your wiki
 
@@ -86,8 +90,9 @@ Host-specific locations and notes:
 - OpenCode uses `~/.config/opencode`.
 - IBM Bob / Bob Shell uses `~/.agents/skills` and `~/.bob/settings/mcp.json` at user scope; `.agents/skills` and `.bob/mcp.json` at the project.
 - Kiro uses `~/.kiro/skills` and `~/.kiro/settings/mcp.json`.
-- Oh My Pi uses `~/.omp/agent` at user scope (the default profile). Use `--project` for named profiles or a relocated `PI_CODING_AGENT_DIR`. This is Oh My Pi (`omp`); see [the upstream Pi integration notes](docs/pi-integration-notes.md).
+- Oh My Pi uses `~/.omp/agent` at user scope (the default profile). Use `--project` for named profiles or a relocated `PI_CODING_AGENT_DIR`.
 - Antigravity uses `~/.gemini/antigravity-cli/skills` and `~/.gemini/config/mcp_config.json`.
+- Pi is separate from Oh My Pi. Pi loads OpenWiki's skill and six lifecycle tools from the npm package; use `pi install --local npm:openwiki` for a project-local install. Its extension starts the package's own CLI through Node, so `openwiki` need not be on `PATH`. Pi is not a target of `openwiki integrations install`.
 
 On Windows, install with a Node.js package manager (`npm install -g openwiki` or `pnpm add -g openwiki`). Installing with `bun` can fall back to compiling the `better-sqlite3` native dependency, which needs Visual Studio Build Tools with the Desktop development with C++ workload.
 

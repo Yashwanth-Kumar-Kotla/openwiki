@@ -140,7 +140,7 @@ between `pnpm run dev` and the built binary.
 > `unrecognized` result, returns an `error` command with the user-facing
 > message before any run work or persisted state is touched. The full command
 > and flag reference lives in
-> [CLI Reference](/openwiki/operations/cli-reference.md).
+> [CLI Reference](./operations/cli-reference.md).
 
 ## Task-routing map
 
@@ -151,49 +151,49 @@ the canonical wiki pages; each one links into the deeper source map.
 
 | I want to…                                                                                                          | Read                                                        |
 | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Get the top-level picture of how the CLI, agent, modes, resumable generation, Claims, finalization, connectors, and the visualizer fit together | [Architecture Overview](/openwiki/architecture/overview.md) |
-| Find which subsystem lives where under `/src`                                                                       | [Source Map](/openwiki/architecture/source-map.md)          |
+| Get the top-level picture of how the CLI, agent, modes, resumable generation, Claims, finalization, connectors, and the visualizer fit together | [Architecture Overview](./architecture/overview.md) |
+| Find which subsystem lives where under `/src`                                                                       | [Source Map](./architecture/source-map.md)          |
 
 ### Learn the core concepts
 
 | I want to…                                                                        | Read                                                                 |
 | --------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Understand grounded Claims: material facts tied to versioned repository evidence   | [Grounded Claims](/openwiki/concepts/grounded-claims.md)             |
-| See what OKF output looks like (frontmatter, provenance, validated Mermaid)        | [Open Knowledge Format Output](/openwiki/concepts/okf-output.md)     |
+| Understand grounded Claims: material facts tied to versioned repository evidence   | [Grounded Claims](./concepts/grounded-claims.md)             |
+| See what OKF output looks like (frontmatter, provenance, validated Mermaid)        | [Open Knowledge Format Output](./concepts/okf-output.md)     |
 
 ### Follow a workflow end to end
 
 | I want to…                                                                                                              | Read                                                                  |
 | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Set up OpenWiki for the first time (provider/model, credentials, repo setup)                                            | [First-Run Onboarding](/openwiki/workflows/onboarding.md)             |
-| Trace the resumable page-job generation flow (`begin → submit_plan → next_page → submit_page → finish`, with on-demand `inspect_page_claims`)                  | [Repository Generation Lifecycle](/openwiki/workflows/repository-generation.md) |
-| Understand how a failing or early-exiting page worker is skipped and restored without losing completed pages            | [Repository Generation Lifecycle](/openwiki/workflows/repository-generation.md) |
-| Understand how repository source drift during a run is detected and why the run finalizes without advancing the source checkpoint | [Repository Generation Lifecycle](/openwiki/workflows/repository-generation.md) |
-| Understand how Claims are reconciled on update and how a page submits sparse Claim decisions (`confirmedClaimIds` / `claims` / `retractedClaimIds`) with issue-free Claims retained automatically and full Claims available via on-demand inspect | [Claims Reconciliation](/openwiki/workflows/claims-reconciliation.md) |
-| Understand deterministic finalize-once finalization, index/provenance sync, link validation, and skipped-page restore on finish | [Wiki Finalization Workflow](/openwiki/workflows/wiki-finalization.md) |
+| Set up OpenWiki for the first time (provider/model, credentials, repo setup)                                            | [First-Run Onboarding](./workflows/onboarding.md)             |
+| Trace the resumable page-job generation flow (`begin → submit_plan → next_page → submit_page → finish`, with on-demand `inspect_page_claims`)                  | [Repository Generation Lifecycle](./workflows/repository-generation.md) |
+| Understand how a failing or early-exiting page worker is skipped and restored without losing completed pages            | [Repository Generation Lifecycle](./workflows/repository-generation.md) |
+| Understand how repository source drift during a run is detected and why the run finalizes without advancing the source checkpoint | [Repository Generation Lifecycle](./workflows/repository-generation.md) |
+| Understand how Claims are reconciled on update and how a page submits sparse Claim decisions (`confirmedClaimIds` / `claims` / `retractedClaimIds`) with issue-free Claims retained automatically and full Claims available via on-demand inspect | [Claims Reconciliation](./workflows/claims-reconciliation.md) |
+| Understand deterministic finalize-once finalization, index/provenance sync, link validation, and skipped-page restore on finish | [Wiki Finalization Workflow](./workflows/wiki-finalization.md) |
 
 ### Operate and configure it
 
 | I want to…                                                                                   | Read                                                         |
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Look up CLI commands and flags (init/update, mode, print, integrations, visualize, schedule) | [CLI Reference](/openwiki/operations/cli-reference.md)        |
-| Understand environment loading, the `~/.openwiki` state directory, provider/token/reasoning settings, and secret sanitization | [Configuration and Environment](/openwiki/operations/configuration.md) |
-| Set up scheduled self-update in CI and the docs-PR workflow                                  | [CI Scheduling and Self-Update](/openwiki/operations/ci-scheduling.md) |
+| Look up CLI commands and flags (init/update, mode, print, integrations, visualize, schedule) | [CLI Reference](./operations/cli-reference.md)        |
+| Understand environment loading, the `~/.openwiki` state directory, provider/token/reasoning settings, and secret sanitization | [Configuration and Environment](./operations/configuration.md) |
+| Set up scheduled self-update in CI and the docs-PR workflow                                  | [CI Scheduling and Self-Update](./operations/ci-scheduling.md) |
 
 ### Integrate with other tools
 
 | I want to…                                                                  | Read                                             |
 | --------------------------------------------------------------------------- | ------------------------------------------------ |
-| Run OpenWiki inside IBM Bob, Codex, Claude Code, OpenCode, Cursor, Kiro, Oh My Pi, or Antigravity CLI | [Coding-Agent Integrations](/openwiki/integrations/coding-agents.md) |
-| Understand the built-in source connectors, the ConnectorRuntime contract, and how to add a new one | [Source Connectors](/openwiki/integrations/connectors.md) |
-| Explore the interactive graph visualizer (live server and static export)    | [Interactive Visualizer](/openwiki/integrations/visualizer.md) |
+| Run OpenWiki inside IBM Bob, Codex, Claude Code, OpenCode, Cursor, Kiro, Oh My Pi, or Antigravity CLI | [Coding-Agent Integrations](./integrations/coding-agents.md) |
+| Understand the built-in source connectors, the ConnectorRuntime contract, and how to add a new one | [Source Connectors](./integrations/connectors.md) |
+| Explore the interactive graph visualizer (live server and static export)    | [Interactive Visualizer](./integrations/visualizer.md) |
 
 ### Test your changes
 
 | I want to…                                                | Read                                           |
 | --------------------------------------------------------- | ---------------------------------------------- |
-| Understand the test layout and how to run and scope tests | [Testing Guide](/openwiki/testing/overview.md) |
-| Understand the LEDGER longitudinal evaluation framework and DeepSWE evaluation harness | [Evaluation Systems](/openwiki/testing/evals.md) |
+| Understand the test layout and how to run and scope tests | [Testing Guide](./testing/overview.md) |
+| Understand the LEDGER longitudinal evaluation framework and DeepSWE evaluation harness | [Evaluation Systems](./testing/evals.md) |
 
 ## Where OpenWiki keeps its state
 
@@ -228,8 +228,8 @@ task-routing map links to pages that exist, and every page remains a durable
 resume unit. A worker that fails on a provider rate limit lowers the live
 concurrency by one (never below `1`) and restores its page for the next run.
 For worker-scaling, retry, and output-token details see
-[Repository Generation Lifecycle](/openwiki/workflows/repository-generation.md)
-and [Configuration and Environment](/openwiki/operations/configuration.md).
+[Repository Generation Lifecycle](./workflows/repository-generation.md)
+and [Configuration and Environment](./operations/configuration.md).
 
 Finalization is deterministic and runs once. `finishRepositoryRun` refuses to
 finish while any page job is still `pending`, validates that every `skipped` job
@@ -262,5 +262,5 @@ supported. The host submits only sparse Claim decisions for each page
 revisions and additions, `retractedClaimIds` for removals); OpenWiki
 automatically retains current issue-free Claims and makes the full Claim set
 available through on-demand `openwiki_inspect_page_claims` for broad rewrites.
-See [Coding-Agent Integrations](/openwiki/integrations/coding-agents.md) for
+See [Coding-Agent Integrations](./integrations/coding-agents.md) for
 install scope, the host registry, and the host-driven lifecycle boundary.

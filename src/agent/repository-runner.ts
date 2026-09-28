@@ -219,11 +219,11 @@ function toToolCallChunk(rawToolCall: Record<string, unknown>): ToolCallChunk {
 }
 
 /**
- * Converts a correctable submission rejection into a failed tool result.
+ * Converts a bounded submission rejection into a failed tool result.
  *
  * @param toolName - Completion tool that rejected the model payload.
- * @param error - Validated repository input error returned by the lifecycle.
- * @param retry - Concrete correction instruction shown to the worker.
+ * @param error - Repository lifecycle error returned to the worker.
+ * @param retry - Concrete next-step instruction shown to the worker.
  * @param toolCallId - LangChain identifier for the active tool call.
  * @returns Error-status tool message that keeps the worker loop active.
  */
@@ -381,7 +381,10 @@ export async function runNativeRepositoryGeneration(
     pageCount: run.state.plan?.pages.length,
   });
 
-  const result = await finishRepositoryRun(run, { skippedPageSnapshots });
+  const result = await finishRepositoryRun(run, {
+    skippedPageSnapshots,
+    onEvent: options.onEvent,
+  });
   if (result.sourceChanged) {
     options.onEvent?.({
       type: "text",
@@ -464,6 +467,20 @@ async function runPlanningAgent(
             "submit_plan",
             error,
             "Correct the plan and call submit_plan again.",
+            (config as { toolCall?: { id?: string } } | undefined)?.toolCall
+              ?.id,
+          );
+        }
+        if (
+          error instanceof RepositoryRunError &&
+          error.code === "invalid_state" &&
+          submitted &&
+          run.state.plan
+        ) {
+          return createSubmissionRejection(
+            "submit_plan",
+            error,
+            "A plan is already installed. Stop planning and do not call submit_plan again.",
             (config as { toolCall?: { id?: string } } | undefined)?.toolCall
               ?.id,
           );
