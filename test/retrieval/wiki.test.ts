@@ -187,6 +187,38 @@ describe("repository wiki retrieval", () => {
     ]);
   });
 
+  test("page metadata matches do not return the full-page introduction reference", async () => {
+    const root = await createRoot();
+    await writeFile(
+      path.join(root, "openwiki/architecture/service.md"),
+      page({
+        title: "Service",
+        description: "Service operation guide.",
+        source: "src/service.ts",
+        body: [
+          "The emergency shutdown token is QUARTZ_ABORT.",
+          "",
+          "## Installation",
+          "",
+          "Install with npm.",
+          "",
+          "## Logging",
+          "",
+          "Logs go to stdout.",
+        ].join("\n"),
+      }),
+      "utf8",
+    );
+
+    for (const query of ["Service", "operation", "src/service.ts"]) {
+      const response = requireSearchResults(await searchWiki(root, { query }));
+      expect(response.results.length).toBeGreaterThan(0);
+      expect(response.results.flatMap((result) => result.ref)).not.toContain(
+        "openwiki/architecture/service.md#service",
+      );
+    }
+  });
+
   test("does not add an introduction result when the title has no prose", async () => {
     const root = await createRoot();
     await writeFile(

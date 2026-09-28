@@ -291,6 +291,11 @@ interface SearchUnit {
   prose: string;
 
   /**
+   * Introduction units match their own prose, not repeated page metadata.
+   */
+  introductionOnly: boolean;
+
+  /**
    * Searchable page path, tags, and source resources.
    */
   identifiers: string;
@@ -538,11 +543,11 @@ async function rankSearchUnits(
     units.forEach((unit, index) =>
       insert.run(
         index + 1,
-        normalizeSearchText(unit.title),
-        normalizeSearchText(unit.description),
+        unit.introductionOnly ? "" : normalizeSearchText(unit.title),
+        unit.introductionOnly ? "" : normalizeSearchText(unit.description),
         normalizeSearchText(unit.heading),
         normalizeSearchText(unit.prose),
-        normalizeSearchText(unit.identifiers),
+        unit.introductionOnly ? "" : normalizeSearchText(unit.identifiers),
       ),
     );
 
@@ -741,16 +746,10 @@ function searchUnits(
       createSearchUnit(section, context, wiki),
     );
     if (firstH1 && introduction.trim()) {
-      units.unshift(
-        createSearchUnit(
-          {
-            ...firstH1,
-            raw: introductionTokens.map((token) => token.raw).join(""),
-          },
-          context,
-          wiki,
-        ),
-      );
+      units.unshift({
+        ...createSearchUnit({ ...firstH1, raw: introduction }, context, wiki),
+        introductionOnly: true,
+      });
     }
     return units;
   }
@@ -779,6 +778,7 @@ function createSearchUnit(
     description: context.description,
     heading: section.depth === 1 ? "" : section.heading,
     prose: section.raw,
+    introductionOnly: false,
     identifiers: context.identifiers,
     sourcePaths: context.sourcePaths,
     excerpt: relevantExcerpt(section.raw, context.terms),
