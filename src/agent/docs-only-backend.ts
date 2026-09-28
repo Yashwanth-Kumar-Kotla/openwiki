@@ -74,7 +74,7 @@ type OpenWikiBackendOptions = LocalShellBackendOptions & {
  */
 const allowedShellCommands = [
   /^pwd$/u,
-  /^git\s+(?:--no-pager\s+)?rev-parse\s+HEAD$/u,
+  /^git[ \t]+(?:--no-pager[ \t]+)?rev-parse[ \t]+HEAD$/u,
 ];
 
 /**
@@ -149,7 +149,7 @@ function referencesClaimsState(command: string): boolean {
  * Filesystem/shell backend that enforces OpenWiki's access boundaries for the
  * doc-generation agent.
  *
- * It wraps the deepagents `LocalShellBackend` and layers on three independent
+ * It wraps the deepagents `LocalShellBackend` and layers on five independent
  * constraints:
  *
  * 1. Shell confinement: shell `execute` is restricted to a small allowlist because
@@ -161,8 +161,9 @@ function referencesClaimsState(command: string): boolean {
  *    to the `openwiki/` tree via {@link isOpenWikiDocsPath}.
  * 4. Claims ownership: repository `.claims` sidecars are hidden from generic
  *    tools and may only be accessed by OpenWiki's direct persistence layer.
+ * 5. Personal mode: shell execution is always denied, including delegated calls.
  *
- * All three are security boundaries against an agent that may be prompt-injected via
+ * These boundaries constrain an agent that may be prompt-injected via
  * untrusted repository content, so path checks canonicalize before matching.
  */
 export class OpenWikiLocalShellBackend extends LocalShellBackend {
@@ -481,11 +482,22 @@ export class OpenWikiLocalShellBackend extends LocalShellBackend {
   }
 
   /**
-   * Run a workspace-safe shell maintenance command. The underlying local shell
-   * backend executes directly on the host, so arbitrary commands are refused in
-   * every mode and filesystem inspection must use the gated virtual tools.
+   * Refuse shell execution in personal mode. Repository runs allow only narrow
+   * maintenance commands because the underlying backend executes on the host.
    */
   override async execute(command: string): Promise<ExecuteResponse> {
+    // Personal agents consume untrusted connector content, including during
+    // unattended ingestion. Enforce this at the backend as well as the tool
+    // surface so delegated or stale tool calls cannot reach the host shell.
+    if (this.outputMode === "local-wiki") {
+      return {
+        exitCode: 1,
+        output:
+          "Shell execution is disabled in personal mode. Use wiki filesystem tools and openwiki_read_raw_item for connector evidence.",
+        truncated: false,
+      };
+    }
+
     if (this.outputMode === "repository" && referencesClaimsState(command)) {
       return {
         exitCode: 1,

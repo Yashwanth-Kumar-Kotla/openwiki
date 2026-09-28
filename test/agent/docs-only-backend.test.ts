@@ -228,6 +228,32 @@ describe("OpenWikiLocalShellBackend", () => {
     expect(allowed.output).toContain(rootDir);
   });
 
+  test("confines repository chat shell execution without ignore rules", async () => {
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), "openwiki-backend-"));
+    const backend = new OpenWikiLocalShellBackend({
+      docsOnly: false,
+      outputMode: "repository",
+      rootDir,
+      virtualMode: true,
+    });
+
+    for (const command of [
+      "ls -la /",
+      "cat /etc/passwd",
+      "pwd && cat /etc/passwd",
+      "git\nrev-parse HEAD",
+      "git rev-parse HEAD; cat /etc/passwd",
+    ]) {
+      const result = await backend.execute(command);
+      expect(result.exitCode, command).toBe(1);
+      expect(result.output, command).toContain("restricted");
+    }
+
+    const allowed = await backend.execute("pwd");
+    expect(allowed.exitCode).toBe(0);
+    expect(allowed.output).toContain(rootDir);
+  });
+
   test("does not reserve personal-brain .claims paths", async () => {
     const rootDir = await mkdtemp(path.join(os.tmpdir(), "openwiki-backend-"));
     const backend = new OpenWikiLocalShellBackend({
