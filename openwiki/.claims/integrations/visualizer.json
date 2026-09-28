@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:93bea3be8c2959855ba281da34ae8d7cfa5b5c3011ecacff8e25994607ab5cd2",
+  "pageVersion": "sha256:1ba0f4f1714d5afb06ae5636d7daea8298204de1e3f030e6aec997d1a16003a4",
   "claims": [
     {
       "id": "claim_cecbf09a48a44444b2ef62cbac04bd3b",
@@ -27,7 +27,7 @@
       "statement": "`buildGraph(wikiRoot)` is the shared graph builder for both live and static modes: it collects Markdown files, reads them into nodes, resolves links into edges, and returns a WikiGraph with root basename, ISO generatedAt timestamp, sorted distinct types, nodes, and edges.",
       "evidence": [
         {
-          "resource": "repo://src/visualize/graph.ts#L322-L338",
+          "resource": "repo://src/visualize/graph.ts#L329-L345",
           "version": "repo-lines-v1:sha256:ac7b350435f15aac26a929bbcc534b43f459872cd2565daa5225602679743bc9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhZGY3YmU0NWRjNWU1ODg5ZDRmMDgwYjIxMTNhMTQwYWVlNGUwZTgyYzZiYWZkNGVlNTY3ZDI2NTVjNzc3NTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         }
       ]
@@ -72,15 +72,15 @@
     },
     {
       "id": "claim_b0941e9ef43f4b0ab3ed20221aeef814",
-      "statement": "Edges are derived from relative Markdown `.md` links resolved against the linking page's directory into node ids; self-links, links to pages not present in the graph, and duplicate edges are dropped, and each edge also records a reciprocal backlink on the target node.",
+      "statement": "linkNodes derives edges from relative Markdown `.md` links resolved against the linking page's directory into node ids; before resolving, each link is run through decodeURIComponent (wrapped in try/catch so a literal invalid percent sequence is kept raw rather than thrown), the target must still match an existing node, and self-links, links to pages not present in the graph, and duplicate edges are dropped, while each surviving edge also records a reciprocal backlink on the target node.",
       "evidence": [
         {
           "resource": "repo://src/visualize/graph.ts#L143-L145",
           "version": "repo-lines-v1:sha256:3c1bf21fad43ca1784e5d547da6b69a14a082b2617368681b16fb6db64fce0e2:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWQ5ZWZkMDNlZmJmZmQ5NjBkZjAxNTc2NTQ3MTVkNmUyOTA1MjQzN2E1ZjI2ZWQ4MjQ3ZWRhMmJkNzA1NDg5ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTc3Y2RhNzQ1ZDZiZGY3OTJjMWM2YmRmY2FjYmNhNTcwYjVkODkyYjI5ODcxNzExNmI1OTVjYjI1OTRmOWY0YSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGJmMTUwYmFlN2FiOTRlZDNkZGE4ODkzZDhhYTdhMjVlYjM3YWMxYjJjMTEwNjIxMjE0YjM5NTNmOGVjZDc0ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzg3NzQxYjhlMjQ4YmZhNmExYjg3NTM4YjA1NjJhNTE5MjUwN2I3NTQ0ZGI2OWRjYThjNjEzZjk1Nzg2NjM2ZSJ9"
         },
         {
-          "resource": "repo://src/visualize/graph.ts#L297-L320",
-          "version": "repo-lines-v1:sha256:0863ac3ac2e0678928ffc5032fc2378db92951fca6e0151fd40f11ef4c6c2beb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkyMDQwZTA5NWE5NGUyYWRhNzRlNDIxZjM3MTg3NTFhOTFhODEwYmZkNjZmNDhmNGU5MzljN2I3NDgwZWI2NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlNWZlM2ZhNzM2YTQzNzRhZjQ0MTIzNWUxNTI0YWE2ZGJkYmFiZDAwNWYwZmY3Zjg0NDcwMjY0ZTgyZjEyODUifQ"
+          "resource": "repo://src/visualize/graph.ts#L297-L327",
+          "version": "repo-lines-v1:sha256:780f168546a9f69954011a95ed7f31a9bd552b5abbb7cb4975e3da0755c6c5b3:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkyMDQwZTA5NWE5NGUyYWRhNzRlNDIxZjM3MTg3NTFhOTFhODEwYmZkNjZmNDhmNGU5MzljN2I3NDgwZWI2NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlNWZlM2ZhNzM2YTQzNzRhZjQ0MTIzNWUxNTI0YWE2ZGJkYmFiZDAwNWYwZmY3Zjg0NDcwMjY0ZTgyZjEyODUifQ"
         }
       ]
     },
@@ -124,15 +124,19 @@
     },
     {
       "id": "claim_2ecd9ad923a9421d9fe17eaefe4c82e0",
-      "statement": "The `/` and `/index.html` responses carry a strict Content-Security-Policy that allows scripts only from self and the jsdelivr CDN and forbids inline scripts, while the graph is exposed as JSON at `/api/graph`.",
+      "statement": "The `/` and `/index.html` responses carry a strict Content-Security-Policy — a single shared `CSP` constant enforced as an HTTP header by the live server and as a `<meta>` tag by static exports — that allows scripts only from `'self'` and the jsdelivr CDN and forbids inline scripts, allows the Google Fonts stylesheet origin (`fonts.googleapis.com`) in `style-src` and the font-file origin (`fonts.gstatic.com`) in `font-src` so the page's Inter typeface request is not blocked, while the graph is exposed as JSON at `/api/graph`.",
       "evidence": [
         {
-          "resource": "repo://src/visualize/page.ts#L8-L18",
-          "version": "repo-lines-v1:sha256:db11e909cbfb896ecbc1bc7428061ec3a31baf9540dca77a0a265d7146b5267a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllODkyZjk2YzY1ZTZlMGM0ZDM4NDFhNDliNTQyOGUzZGEzMDI1ZWY1ODQ3NDU3NWI0NjhhZjA3YzRkMjYwMGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3N2IyOWY0ZTcyZmZlMTU5ZThhYmM1YmI0ZGQ2YjM2YjMyMDBiMDNkNThlY2I0NDJhZjRjODY5MTE3OGEwMGYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMyYjA5MTMwNThmMGU0MTgyOGE5ZDY3MTE5MmFiMDVhZjA2OGQwOWEyMThhNjkzODY1ZDMxNzYxOWM1YTczOWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMTQyMWExYTIwY2U4MWE3ZDNjYjRhNTFkNmZjYmEyMzBkZGMyNmYyMjYxMDEyZWU3YzVlZWI2ZDQ4YjA4ZmMifQ"
+          "resource": "repo://src/visualize/page.ts#L8-L20",
+          "version": "repo-lines-v1:sha256:ff942b5e2afe5248e239eae715da427911551442e33e5c40d56c918b7deb2527:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllODkyZjk2YzY1ZTZlMGM0ZDM4NDFhNDliNTQyOGUzZGEzMDI1ZWY1ODQ3NDU3NWI0NjhhZjA3YzRkMjYwMGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3N2IyOWY0ZTcyZmZlMTU5ZThhYmM1YmI0ZGQ2YjM2YjMyMDBiMDNkNThlY2I0NDJhZjRjODY5MTE3OGEwMGYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMyYjA5MTMwNThmMGU0MTgyOGE5ZDY3MTE5MmFiMDVhZjA2OGQwOWEyMThhNjkzODY1ZDMxNzYxOWM1YTczOWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMTQyMWExYTIwY2U4MWE3ZDNjYjRhNTFkNmZjYmEyMzBkZGMyNmYyMjYxMDEyZWU3YzVlZWI2ZDQ4YjA4ZmMifQ"
         },
         {
           "resource": "repo://src/visualize/server.ts#L167-L198",
           "version": "repo-lines-v1:sha256:8704fb0e751671eb4c8a118bcc51367d83e1c471a7c4cbebec1ccee223cd4476:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1N2FjMGVmNTRlZjVmNGEyMDA3OTQzZDRhMjViMzQ5ODU4ZGQ0ODZiMTY3MWFhNzQxNzk3ZmJhNzhmMTg5NjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI5NTg1Njk1YmIzOTY0MDJiYTA2OTU0MjlmY2ZhZTA0OGE2ZjY5ZWY2ZjA5NjYzODQxODYwNTY0MjhlODk0OTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRjOGIwZDE5NzFhMGE4OTg4MzYxN2Q5MjI1NmFhYjU3ODhmYWEyOGM5ZGY5ZDUxZWZlMTM5MWRlNjcxZjY4NTUifQ"
+        },
+        {
+          "resource": "repo://test/visualize/page.test.ts#L106-L124",
+          "version": "repo-lines-v1:sha256:8409c477c83111c25443cd2d3a8f78e7de862057d9c848dfe9fbfe728ebbeff1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiYmQyZjVjOGRmYzNmYTYxZDU0MjUzNmIwNTYwNTM4YTc3YWZiNjBmNWVhZDU2NzIwMjk1MzdiNjJlMjI2YjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNhM2U0NmY5NDI3NmI2ZjZmNGVkMWYwMmFmNzhiZWY2YTJlZTFjNDM5ZGQ1NTg0Yjk3Mzk0ODMxMzIxNGQyYjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlYTVlZDJiOGIzMDg0MzU4ZWM1OWQ5Yjg5MzA1YTE1ZjFhNjA0MzliMzlhMDVmNDNmYzY0ZjFhMThmY2EyNzEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYzNjQxMzA5M2UyMjY5YjY0OTczZjg0YzkzZjFiNzcxMWJmYWY1YTc2MzZhOWMxNGQ0ZjBlNDVmZmYwYWNiZWIifQ"
         }
       ]
     },
@@ -362,7 +366,7 @@
         },
         {
           "resource": "repo://test/visualize/page.test.ts#L71-L117",
-          "version": "repo-lines-v1:sha256:8793d737f9a955020a2f85f2542c82b35af055f143aa5a1f499b67a3dbd8e6bf:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYwMjA3MDE2Y2ZmMWI1M2U4NTU5ZDVhNTM2MmY1NGY5MTZlOGVkZDZmYjQ1ZDI3ZDUzNDU0Mzk5MmQ5NmRhZjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNhM2U0NmY5NDI3NmI2ZjZmNGVkMWYwMmFmNzhiZWY2YTJlZTFjNDM5ZGQ1NTg0Yjk3Mzk0ODMxMzIxNGQyYjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMxMjU3N2VmNzRiMTBjN2E5MDhjNzM4OTdmNTE1NTY4ZDA3ZTU2YWJjMzUwYmM1Nzc4ZWM0OGNjZmNhMmE5ZjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2ZjViNDBiMTU4NDU3ZDE3ODY0ZjIxNzkwNzg2ZGQ1YTJlY2RiNjRiNjZhNjUxZjc4OGQ0ZTI1Y2QzMzAzZDIifQ"
+          "version": "repo-lines-v1:sha256:b3470ed9c229850ceed6126f9d9343768536b1c0fe1d1afa44c99d369317928e:eyJzZWxlY3RlZExpbmVDb3VudCI6NzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYwMjA3MDE2Y2ZmMWI1M2U4NTU5ZDVhNTM2MmY1NGY5MTZlOGVkZDZmYjQ1ZDI3ZDUzNDU0Mzk5MmQ5NmRhZjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNhM2U0NmY5NDI3NmI2ZjZmNGVkMWYwMmFmNzhiZWY2YTJlZTFjNDM5ZGQ1NTg0Yjk3Mzk0ODMxMzIxNGQyYjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMxMjU3N2VmNzRiMTBjN2E5MDhjNzM4OTdmNTE1NTY4ZDA3ZTU2YWJjMzUwYmM1Nzc4ZWM0OGNjZmNhMmE5ZjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2ZjViNDBiMTU4NDU3ZDE3ODY0ZjIxNzkwNzg2ZGQ1YTJlY2RiNjRiNjZhNjUxZjc4OGQ0ZTI1Y2QzMzAzZDIifQ"
         }
       ]
     },
@@ -404,7 +408,7 @@
     }
   ],
   "verification": {
-    "by": "openwiki/0.5.0",
-    "at": "2026-09-04T08:13:11.978Z"
+    "by": "openwiki/0.5.2",
+    "at": "2026-09-23T08:09:37.122Z"
   }
 }

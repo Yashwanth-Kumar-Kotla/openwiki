@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { formatEnv, MANAGED_ENV_KEYS, parseEnv } from "../../src/config/env.ts";
+import {
+  formatEnv,
+  MANAGED_ENV_KEYS,
+  parseEnv,
+  createCredentialPreview,
+} from "../../src/config/env.ts";
 
 describe("parseEnv", () => {
   test("parses simple KEY=value lines", () => {
@@ -137,6 +142,10 @@ describe("MANAGED_ENV_KEYS", () => {
     expect(MANAGED_ENV_KEYS).toContain("OPENWIKI_STREAM_IDLE_TIMEOUT");
   });
 
+  test("manages the repository page worker concurrency", () => {
+    expect(MANAGED_ENV_KEYS).toContain("OPENWIKI_PAGE_CONCURRENCY");
+  });
+
   test("manages the Google Cloud settings for the gemini-enterprise provider", () => {
     expect(MANAGED_ENV_KEYS).toContain("GOOGLE_CLOUD_PROJECT");
     expect(MANAGED_ENV_KEYS).toContain("GOOGLE_CLOUD_LOCATION");
@@ -149,12 +158,19 @@ describe("MANAGED_ENV_KEYS", () => {
 
   test("manages hosted OpenAI-compatible provider base URLs", () => {
     expect(MANAGED_ENV_KEYS).toContain("BASETEN_BASE_URL");
+    expect(MANAGED_ENV_KEYS).toContain("BOB_BASE_URL");
     expect(MANAGED_ENV_KEYS).toContain("FIREWORKS_BASE_URL");
     expect(MANAGED_ENV_KEYS).toContain("NVIDIA_BASE_URL");
   });
 
   test("manages the reasoning effort setting", () => {
     expect(MANAGED_ENV_KEYS).toContain("OPENWIKI_REASONING_EFFORT");
+  });
+
+  test("manages the OpenAI-compatible reasoning effort opt-in", () => {
+    expect(MANAGED_ENV_KEYS).toContain(
+      "OPENWIKI_OPENAI_COMPATIBLE_REASONING_EFFORT_SUPPORTED",
+    );
   });
 });
 
@@ -188,5 +204,19 @@ describe("parseEnv <-> formatEnv round-trip", () => {
     };
 
     expect(parseEnv(formatEnv(original))).toEqual(original);
+  });
+});
+
+describe("createCredentialPreview", () => {
+  test("returns full string of asterisks for strings 10 chars or shorter", () => {
+    expect(createCredentialPreview("short1234")).toBe('"*********"');
+    expect(createCredentialPreview("1234567890")).toBe('"**********"');
+  });
+
+  test("returns ellipsis and last 4 characters for long strings", () => {
+    expect(createCredentialPreview("sk-abc123DEF456")).toBe('"...F456"');
+    expect(
+      createCredentialPreview("sk-or-v1-abcdefghijklmnopqrstuvwxyz0123"),
+    ).toBe('"...0123"');
   });
 });
